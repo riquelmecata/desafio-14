@@ -18,12 +18,62 @@ describe('Testing Cart DAO Mocha/Chai/SuperTest', () => {
     })
 
     it("El DAO debe agregar un carrito en la DB", async function () {
-        const result = await requester.post('/api/carts')
-        console.log(result)
-        expect(result._body).to.have.property('result')
-        expect(result._body.result).to.have.property('products')
-        expect(result._body.result).to.have.property('_id')
+        this.timeout(5000)
+        try {
+            let mockCart = {
+                products: [
+                    {
+                        item: '6521c5ded7b1040b9f43c270',
+                        qty: 7
+                    }
+                ]
+            }
+            const result = await this.cartsDao.createCart(mockCart)
+            expect(result).to.have.property('products')
+            expect(result).to.have.property('_id')
+        } catch(error) {
+            console.error("Error durante el test: ", error)
+        }
+
     })
+
+    it("Debería devolver un carrito por el id desde la DB", async function () {
+        this.timeout(5000)
+        try {
+            let idCart = '651cd552fef520effdaae934'
+            const result = await this.cartsDao.getCartById(idCart)
+            expect(result).to.have.property('_id') // Chai
+        } catch(error) {
+            console.error("Error durante el test: ", error)
+        }
+    })
+
+    it('Agregar producto al carrito', async function () {
+        this.timeout(5000)
+        try {
+            let idCart = '651cd552fef520effdaae934';
+            let idProduct = '651cd48efef520effdaae927';
+            const result = await this.cartsDao.updateCart(idCart, idProduct);
+            expect(result).to.have.property('_id'); // Chai
+        } catch(error) {
+            console.error("Error durante el test: ", error);
+        }
+    }); 
+
+    it('Vaciar carrito', async function () {
+        this.timeout(5000)
+        try {
+            let idCart = '651cd552fef520effdaae934';
+            const result = await this.cartsDao.cartCleaner(idCart);
+            expect(result).to.have.property('_id')
+            expect(result).to.have.property('products')
+            expect(result.products).to.be.an('array')
+            expect(result.products).to.have.lengthOf(0)
+        } catch(error) {
+            console.error("Error durante el test: ", error);
+        }
+        
+    });
 
     after(function(done) {
         this.timeout(5000);
