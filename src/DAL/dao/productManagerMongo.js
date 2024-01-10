@@ -47,8 +47,8 @@ export default class ProductManager {
         if (title !== undefined && description !== undefined && code !== undefined && price !== undefined && stock !== undefined && category !== undefined) {
 
             try {
-                await ProductsModel.create(productEn)
-                return "Producto agregado"
+                const createdProduct = await ProductsModel.create(productEn);
+                return createdProduct;
             } catch (e) {
                 throw new Error(e.message)
             }
@@ -73,6 +73,8 @@ export default class ProductManager {
         try {
             let deleted = await ProductsModel.findByIdAndDelete(id)
             if (!deleted) throw new Error("No encontrado")
+              // Producto eliminado exitosamente
+        return { message: "Producto eliminado con éxito" };
         } catch (error) {
             throw error
         }

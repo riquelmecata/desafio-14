@@ -12,12 +12,12 @@ mongoose
 const expect = chai.expect;
 const requester = supertest("http://localhost:8080");
 
-describe('Testing Cart DAO Mocha/Chai/SuperTest', () => {
+describe('Testing Carts API', () => {
     before(function () {
         this.cartsDao = new CartManagerDB()
     })
 
-    it("El DAO debe agregar un carrito en la DB", async function () {
+    it("Debe agregar un carrito en la DB", async function () {
         this.timeout(5000)
         try {
             let mockCart = {
